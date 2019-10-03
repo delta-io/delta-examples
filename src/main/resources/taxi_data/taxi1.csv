@@ -1,0 +1,6 @@
+VendorID,tpep_pickup_datetime,tpep_dropoff_datetime,passenger_count,trip_distance,RatecodeID,store_and_fwd_flag,PULocationID,DOLocationID,payment_type,fare_amount,extra,mta_tax,tip_amount,tolls_amount,improvement_surcharge,total_amount
+1,12/31/2018 11:59:58 PM,01/01/2019 12:02:36 AM,2,0.5,1,N,237,263,1,4,0.5,0.5,1.05,0,0.3,6.35
+1,12/31/2018 11:59:56 PM,01/01/2019 12:03:13 AM,1,0.7,1,N,7,7,2,4.5,0.5,0.5,0,0,0.3,5.8
+1,12/31/2018 11:59:55 PM,01/01/2019 12:13:30 AM,4,3,1,N,140,238,1,12,0.5,0.5,2.65,0,0.3,15.95
+1,12/31/2018 11:59:52 PM,01/01/2019 12:11:59 AM,2,2.3,1,N,48,43,2,10.5,0.5,0.5,0,0,0.3,11.8
+2,12/31/2018 11:59:50 PM,01/01/2019 12:04:20 AM,1,0.75,1,N,87,148,2,5,0.5,0.5,0,0,0.3,6.3

@@ -1,0 +1,12 @@
+{
+  "add":{
+    "path":"part-00000-43ccfdd0-13bb-423b-94de-0d1e7ffd6898-c000.snappy.parquet",
+    "partitionValues":{
+
+    },
+    "size":4243,
+    "modificationTime":1567956346000,
+    "dataChange":true
+  }
+}
+

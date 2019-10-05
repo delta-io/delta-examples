@@ -2,7 +2,7 @@
 
 This repo provides working code for the examples covered in the [Delta Lake documentation](https://docs.delta.io/latest/index.html).
 
-## [Create a table](https://docs.delta.io/latest/quick-start.html#create-a-table)
+## [Create a table](https://docs.delta.io/latest/quick-start.html#create-a-table) and [read data](https://docs.delta.io/latest/quick-start.html#read-data)
 
 Let's use the `spark.range()` function to create a DataFrame of numbers and write out the DataFrame as a Delta lake.
 
@@ -50,4 +50,43 @@ CreateATable.readTable()
 ```
 
 Read the [Introduction to Delta Lake](https://mungingdata.com/delta-lake/introduction-time-travel/) blog post to learn more Delta lake basics.
+
+## [Update Table Data](https://docs.delta.io/latest/quick-start.html#update-table-data)
+
+Here's some code to update a Delta table:
+
+```scala
+object UpdateTableData extends SparkSessionWrapper {
+
+  val path: String = new java.io.File("./tmp/delta-table/").getCanonicalPath
+
+  def updateDeltaTable(): Unit = {
+    val data = spark.range(5, 10)
+    data
+      .write
+      .format("delta")
+      .mode("overwrite")
+      .save(path)
+  }
+
+}
+```
+
+Let's run the code:
+
+```aidl
+UpdateTableData.updateDeltaTable()
+
+CreateATable.readTable()
+
++---+
+| id|
++---+
+|  5|
+|  6|
+|  7|
+|  8|
+|  9|
++---+
+```
 

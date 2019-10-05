@@ -90,3 +90,136 @@ CreateATable.readTable()
 +---+
 ```
 
+## [Conditional updates without overwrite](https://docs.delta.io/latest/quick-start.html#conditional-update-without-overwrite)
+
+Create the initial dataset:
+
+```scala
+val path: String = new java.io.File("./tmp/delta-table/").getCanonicalPath
+val deltaTable = DeltaTable.forPath(spark, path)
+
+def createInitialDataset(): Unit = {
+  val data = spark.range(0, 5)
+  data
+    .write
+    .format("delta")
+    .mode(SaveMode.Overwrite)
+    .save(path)
+
+  deltaTable.toDF.show()
+}
+```
+
+```aidl
+createInitialDataset()
+
++---+
+| id|
++---+
+|  0|
+|  1|
+|  2|
+|  3|
+|  4|
++---+
+```
+
+Add one hundred to the even numbers:
+
+```scala
+def addOneHundredToEvens(): Unit = {
+  // Update every even value by adding 100 to it
+  deltaTable.update(
+    condition = expr("id % 2 == 0"),
+    set = Map("id" -> expr("id + 100")))
+
+  deltaTable.toDF.show()
+}
+```
+
+```aidl
+addOneHundredToEvens()
+
++---+
+| id|
++---+
+|100|
+|  1|
+|102|
+|  3|
+|104|
++---+
+```
+
+Delete the even numbers:
+
+```scala
+def deleteEvenNumbers(): Unit = {
+  // Delete every even value
+  deltaTable.delete(condition = expr("id % 2 == 0"))
+
+  deltaTable.toDF.show()
+}
+```
+
+```aidl
+deleteEvenNumbers()
+
++---+
+| id|
++---+
+|  1|
+|  3|
++---+
+```
+
+Upsert the new data:
+
+```scala
+def upsertNewData(): Unit = {
+  // Upsert (merge) new data
+  val newData = spark.range(0, 20).toDF
+
+  deltaTable.as("oldData")
+    .merge(
+      newData.as("newData"),
+      "oldData.id = newData.id")
+    .whenMatched
+    .update(Map("id" -> col("newData.id")))
+    .whenNotMatched
+    .insert(Map("id" -> col("newData.id")))
+    .execute()
+
+  deltaTable.toDF.show()
+}
+```
+
+```aidl
+upsertNewData()
+
++---+
+| id|
++---+
+| 11|
+| 18|
+| 10|
+|  5|
+|  8|
+| 13|
+| 14|
+| 19|
+|  4|
+| 17|
+| 15|
+| 12|
+|  7|
+| 16|
+|  0|
+|  1|
+|  6|
+|  3|
+|  9|
+|  2|
++---+
+```
+

@@ -1,5 +1,6 @@
 package mrpowers.delta.examples
 
+import mrpowers.delta.SparkSessionWrapper
 import org.apache.spark.sql.SaveMode
 
 object CreateATable extends SparkSessionWrapper {

@@ -1,6 +1,7 @@
 package mrpowers.delta.examples
 
 import io.delta.tables._
+import mrpowers.delta.SparkSessionWrapper
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.SaveMode
 

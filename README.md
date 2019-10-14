@@ -2,6 +2,8 @@
 
 This repo provides working code for the examples covered in the [Delta Lake documentation](https://docs.delta.io/latest/index.html).
 
+It also provides code to support Spark Summit talks and blog posts.
+
 ## [Create a table](https://docs.delta.io/latest/quick-start.html#create-a-table) and [read data](https://docs.delta.io/latest/quick-start.html#read-data)
 
 Let's use the `spark.range()` function to create a DataFrame of numbers and write out the DataFrame as a Delta lake.

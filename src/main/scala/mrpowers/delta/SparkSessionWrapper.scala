@@ -1,4 +1,4 @@
-package mrpowers.delta.examples
+package mrpowers.delta
 
 import org.apache.spark.sql.SparkSession
 

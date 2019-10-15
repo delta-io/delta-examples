@@ -225,3 +225,58 @@ upsertNewData()
 +---+
 ```
 
+## [Time Travel](https://docs.delta.io/latest/quick-start.html#read-older-versions-of-data-using-time-travel)
+
+Let's create a Delta data lake and then update it with some additional data.
+
+```scala
+val path: String = new java.io.File("./tmp/delta-table-tt/").getCanonicalPath
+
+val data = spark.range(0, 5)
+data.write.format("delta").mode("overwrite").save(path)
+
+val moreData = spark.range(20, 25)
+moreData.write.format("delta").mode("overwrite").save(path)
+```
+
+The Delta lake will currently contain data from the original load and the incremental update:
+
+```
+spark.read.format("delta").load(path).show()
+
++---+
+| id|
++---+
+| 20|
+| 21|
+| 22|
+| 23|
+| 24|
+|  0|
+|  1|
+|  2|
+|  3|
+|  4|
++---+
+```
+
+We can time travel back to "version 0" of the Delta lake (after the initial data load) and see the initial state of the Delta lake.
+
+```
+spark.read.format("delta").option("versionAsOf", 0).load(path).show()
+
++---+
+| id|
++---+
+|  0|
+|  1|
+|  2|
+|  3|
+|  4|
++---+
+```
+
+
+
+
+

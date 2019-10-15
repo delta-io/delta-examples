@@ -4,7 +4,7 @@ import java.io.IOException
 import java.nio.file.{Files, Paths, Path, SimpleFileVisitor, FileVisitResult}
 import java.nio.file.attribute.BasicFileAttributes
 
-object Util {
+object NioUtil {
 
   def remove(root: Path, deleteRoot: Boolean = true): Unit =
     Files.walkFileTree(root, new SimpleFileVisitor[Path] {

@@ -3,8 +3,8 @@ package mrpowers.delta.examples
 import com.github.mrpowers.spark.fast.tests.DataFrameComparer
 import org.scalatest.FunSpec
 import com.github.mrpowers.spark.daria.sql.SparkSessionExt._
+import com.github.mrpowers.spark.daria.utils.NioUtils
 import org.apache.spark.sql.types._
-import mrpowers.delta.NioUtil
 
 class TimeTravelSpec extends FunSpec with SparkSessionTestWrapper with DataFrameComparer {
 
@@ -27,7 +27,7 @@ class TimeTravelSpec extends FunSpec with SparkSessionTestWrapper with DataFrame
 
     assertSmallDataFrameEquality(v0, expectedDF)
 
-    NioUtil.removeAll(path)
+    NioUtils.removeAll(path)
 
   }
 

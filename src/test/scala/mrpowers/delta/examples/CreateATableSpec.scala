@@ -2,8 +2,8 @@ package mrpowers.delta.examples
 
 import org.scalatest.FunSpec
 import com.github.mrpowers.spark.daria.sql.SparkSessionExt._
+import com.github.mrpowers.spark.daria.utils.NioUtils
 import com.github.mrpowers.spark.fast.tests.DataFrameComparer
-import mrpowers.delta.NioUtil
 import org.apache.spark.sql.types._
 
 class CreateATableSpec extends FunSpec with SparkSessionTestWrapper with DataFrameComparer {
@@ -32,7 +32,7 @@ class CreateATableSpec extends FunSpec with SparkSessionTestWrapper with DataFra
 
     assertSmallDataFrameEquality(df, expectedDF)
 
-    NioUtil.removeAll(path)
+    NioUtils.removeAll(path)
 
   }
 

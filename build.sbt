@@ -9,7 +9,7 @@ scalaVersion := "2.11.12"
 libraryDependencies += "org.apache.spark" %% "spark-sql" % "2.4.3" % "provided"
 libraryDependencies += "io.delta" %% "delta-core" % "0.4.0" % "provided"
 
-libraryDependencies += "mrpowers" % "spark-daria" % "0.35.0-s_2.11"
+libraryDependencies += "mrpowers" % "spark-daria" % "0.35.2-s_2.11"
 
 libraryDependencies += "MrPowers" % "spark-fast-tests" % "0.17.2-s_2.11" % "test"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"

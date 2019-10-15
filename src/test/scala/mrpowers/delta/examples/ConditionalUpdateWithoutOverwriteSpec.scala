@@ -2,10 +2,10 @@ package mrpowers.delta.examples
 
 import org.scalatest.FunSpec
 import io.delta.tables._
-import mrpowers.delta.NioUtil
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 import com.github.mrpowers.spark.daria.sql.SparkSessionExt._
+import com.github.mrpowers.spark.daria.utils.NioUtils
 import com.github.mrpowers.spark.fast.tests.{ColumnComparer, DataFrameComparer}
 
 class ConditionalUpdateWithoutOverwriteSpec
@@ -76,7 +76,7 @@ class ConditionalUpdateWithoutOverwriteSpec
 
     assertSmallDataFrameEquality(df3, postUpsertDF, orderedComparison = false)
 
-    NioUtil.removeAll(path)
+    NioUtils.removeAll(path)
 
   }
 

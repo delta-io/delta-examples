@@ -11,7 +11,7 @@ object SparkSummitEurope2019 extends SparkSessionWrapper {
 
   def createSsEuropeDeltaLake(): Unit = {
 
-    val path = new java.io.File("./src/main/resources/ss_europe/").getCanonicalPath
+    val path = new java.io.File("./src/test/resources/ss_europe/").getCanonicalPath
     val df = spark
       .read
       .option("header", "true")
@@ -266,14 +266,6 @@ object SparkSummitEurope2019 extends SparkSessionWrapper {
       .mode(SaveMode.Append)
       .save(path)
 
-  }
-
-  def showNewFile(): Unit = {
-    val path = new java.io.File("./tmp/ss_europe_delta_lake/part-00000-7f8cd4ac-8f83-406a-941c-ff9184bddb5d-c000.snappy.parquet").getCanonicalPath
-    val df = spark
-      .read
-      .parquet(path)
-    df.show()
   }
 
 }

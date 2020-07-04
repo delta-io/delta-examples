@@ -4,10 +4,10 @@ name := "delta-examples"
 
 version := "0.0.1"
 
-scalaVersion := "2.11.12"
+scalaVersion := "2.12.10"
 
-libraryDependencies += "org.apache.spark" %% "spark-sql" % "2.4.3" % "provided"
-libraryDependencies += "io.delta" %% "delta-core" % "0.4.0" % "provided"
+libraryDependencies += "org.apache.spark" %% "spark-sql" % "3.0.0" % "provided"
+libraryDependencies += "io.delta" %% "delta-core" % "0.7.0" % "provided"
 
 libraryDependencies += "mrpowers" % "spark-daria" % "0.35.2-s_2.11"
 

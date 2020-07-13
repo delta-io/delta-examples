@@ -12,6 +12,7 @@ abstract class EltPipeline(spark: SparkSession, rootPath: String) {
   val schema: StructType
   val partitionColumns: List[String]
   val uniqueConditions: String
+  val columnRenameMap: Map[String,String]
 
   lazy val validConditionExpr = TableHelper.createValidConditionExpr(schema)
   val additionalDetailsExpr: Column
@@ -21,6 +22,7 @@ abstract class EltPipeline(spark: SparkSession, rootPath: String) {
 
   def prepare(source: DataFrame): DataFrame = source
   def parseRawData(rawData: String): Column
+
   def withAdditionalColumns(source: DataFrame): DataFrame = source
 
   final def apply(source: DataFrame): DataFrame = {
@@ -30,6 +32,7 @@ abstract class EltPipeline(spark: SparkSession, rootPath: String) {
       .transform(prepare)
       .select(struct("*") as 'origin)
       .transform(parse)
+      .transform(withColumnsRenamed)
       .transform(withAdditionalColumns)
       .transform(withParseDetails)
       .transform(write)
@@ -55,6 +58,10 @@ abstract class EltPipeline(spark: SparkSession, rootPath: String) {
       )
   }
 
+  final def withColumnsRenamed(source: DataFrame): DataFrame = {
+    source.transform(ColumnHelper.withColumnsRenamed(columnRenameMap))
+  }
+
   final def withParseDetails(parsed: DataFrame): DataFrame = {
     parsed.withColumn(
       "parse_details",
@@ -73,13 +80,28 @@ abstract class EltPipeline(spark: SparkSession, rootPath: String) {
       .outputMode("append")
       .start()
 
-    //Repartion /Vacuum
+    //Decompress in interval's if oss ?
+    /* DeltaLogHelpers.partitionedLake1GbChunks
+
+     spark.read
+       .format("delta")
+       .load(path)
+       .where(partition)
+       .repartition(numFilesPerPartition)
+       .write
+       .option("dataChange", "false")
+       .format("delta")
+       .mode("overwrite")
+       .option("replaceWhere", partition)
+       .save(path)*/
     source
   }
 
   private def insertToDelta(batchDF: DataFrame, batchId: Long) {
     val valid = col("parse_details.status") === "OK"
     val invalid = col("parse_details.status") === "NOT_VALID"
+
+    withBatchId(batchDF, batchId)
 
     batchDF.persist()
 
@@ -93,6 +115,12 @@ abstract class EltPipeline(spark: SparkSession, rootPath: String) {
       .execute()*/
 
     batchDF.unpersist()
+  }
+
+  private def withBatchId(batchDF: DataFrame, batchId: Long) = {
+    if (batchDF.containsColumn("batch_id")) {
+      batchDF.withColumn("batch_id", lit(batchId))
+    }
   }
 
   private def insert(batchDF: DataFrame, columnPredicate: Column, tableName: String) {

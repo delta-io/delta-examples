@@ -2,9 +2,11 @@ package mrpowers.delta.elt
 
 import org.apache.spark.sql.{Column, SparkSession}
 import org.apache.spark.sql.functions.col
-import org.apache.spark.sql.types.{StructField, StructType}
+import org.apache.spark.sql.types.{DataTypes, StructField, StructType}
 
 object TableHelper {
+
+  val decimalType = DataTypes.createDecimalType(32, 9)
 
   def createSinkTable(spark: SparkSession, tableName: String, schema: StructType, partitionColumns: List[String], rootPath: String): Unit = synchronized {
     val fields = getTableFields(schema)
@@ -35,13 +37,15 @@ object TableHelper {
 
   def createValidConditionExpr(schema: StructType): Column = {
     var column = col("dummy")
+    var first = true
 
     for (field <- schema.fields)
       if (!field.nullable)
 
-        if (field.equals(schema.fields.head))
+        if (first) {
           column = createColumn(field)
-        else
+          first = false
+        } else
           column = column.and(createColumn(field))
 
     column

@@ -1,0 +1,1 @@
+{"trade_id":"abc","ts":1571120223000,"ob_id":"AAPL","ask_member":"FirmA","bid_member":"FirmB","volume":100,"price":10}

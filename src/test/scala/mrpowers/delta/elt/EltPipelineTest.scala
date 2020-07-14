@@ -38,8 +38,8 @@ object EltPipelineTest extends FunSpec with SparkSessionTestWrapper with DataFra
   }
 
   private def cleanUp = {
-    new File(rootPath+"/invalid_records").delete()
-    new File(rootPath+"/trade/sink").delete()
+   // new File(rootPath+"/invalid_records").delete()
+   // new File(rootPath+"/trade/sink").delete()
   }
 
   def createInvalidRecordsTable {

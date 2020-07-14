@@ -1,24 +1,30 @@
-package mrpowers.delta.elt
+package mrpowers.delta.elt.helper
 
-import org.apache.spark.sql.{Column, SparkSession}
 import org.apache.spark.sql.functions.col
-import org.apache.spark.sql.types.{DataTypes, StructField, StructType}
+import org.apache.spark.sql.types.{StructField, StructType}
+import org.apache.spark.sql.{Column, SparkSession}
 
 object TableHelper {
 
-  val decimalType = DataTypes.createDecimalType(32, 9)
+  final val invalidRecordsTableName = "invalid_records"
 
-  def createSinkTable(spark: SparkSession, tableName: String, schema: StructType, partitionColumns: List[String], rootPath: String): Unit = synchronized {
+  def createSinkTable(spark: SparkSession, tableName: String, schema: StructType, partitionColumns: List[String], rootPath: String) {
     val fields = getTableFields(schema)
     val partitions = partitionColumns.mkString("(", ",", ")")
-    var location = rootPath.replace("C:", "").replace("\\", "/")
-    location = "'" + location + "/" + tableName + "/sink'"
+    val location = createDeltaLocationStr(rootPath, tableName+"/sink")
 
+    spark.sql("DROP TABLE IF EXISTS "+ tableName)
     spark.sql(
-      s"""CREATE TABLE IF NOT EXISTS $tableName $fields
+      s"""CREATE TABLE $tableName $fields
         |  USING DELTA
         |    PARTITIONED BY $partitions
         |  LOCATION  $location""".stripMargin)
+  }
+
+  def createDeltaLocationStr(rootPath: String, folder: String): String ={
+    var location = rootPath.replace("C:", "").replace("\\", "/")
+    location = "'" + location +"/"+ folder +"'"
+    location
   }
 
   private def getTableFields(schema: StructType) = {
@@ -31,10 +37,6 @@ object TableHelper {
     field.name + " " + field.dataType.sql + " " + (if (!field.nullable) "NOT NULL" else "")
   }
 
-  def createInvalidRecordsTable(rootPath: String): Unit = synchronized {
-//DPDPDP
-  }
-
   def createValidConditionExpr(schema: StructType): Column = {
     var column = col("dummy")
     var first = true
@@ -43,15 +45,11 @@ object TableHelper {
       if (!field.nullable)
 
         if (first) {
-          column = createColumn(field)
+          column = col(field.name).isNotNull
           first = false
         } else
-          column = column.and(createColumn(field))
+          column && col(field.name).isNotNull
 
     column
-  }
-
-  private def createColumn(field: StructField) = {
-    col("\"" + field.name + "\"").isNotNull
   }
 }

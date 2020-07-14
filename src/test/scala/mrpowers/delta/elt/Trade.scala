@@ -1,47 +1,47 @@
 package mrpowers.delta.elt
 
-import org.apache.spark.sql.functions.{col, from_json}
+import mrpowers.delta.elt.helper.{ColumnHelper, TableHelper}
+import org.apache.spark.sql.functions.{col, concat_ws, from_json, input_file_name, lit}
 import org.apache.spark.sql.types.{DataTypes, DateType, LongType, StringType, StructField, StructType}
 import org.apache.spark.sql.{Column, DataFrame, SparkSession}
 
-class Trade(spark: SparkSession, streamingDF: DataFrame, additionalDetails: Column, rootPath: String) extends EltPipeline(spark: SparkSession,rootPath: String) {
-
-  override val additionalDetailsExpr = additionalDetails
-
-  override val partitionColumns: List[String] = List("trade_date", "ob_id")
+class Trade(streamingDF: DataFrame) extends Elt() {
 
   override val tableName: String = "trade"
 
-  override val uniqueConditions = "x.batch_id = y.batch_id AND x.trade_id = y.trade_id";
+  override val validConditionExpr: Column = TableHelper.createValidConditionExpr(schema)
 
-  override val columnRenameMap = Map("TRADE_ID" -> "trade_id", "TIMESTAMP" -> "ts", "BROKER" -> "broker")
+  override val additionalDetailsExpr: Column = concat_ws(":", lit("Input File Name"), input_file_name())
 
-  override val schema = StructType(
+  override val uniqueConditions = "x.trade_id = y.trade_id";
+
+  private lazy val parsingSchema: StructType = StructType(
     Seq(
       StructField("trade_id", StringType, false),
-      StructField("trade_date", DateType, false),
       StructField("ts", LongType, false),
       StructField("ob_id", StringType, false),
       StructField("ask_member", StringType, false),
-      StructField("sell_member", StringType, false),
-      StructField("volume", TableHelper.decimalType, false),
-      StructField("price", TableHelper.decimalType, false),
-      StructField("turnover", TableHelper.decimalType, false),
-      StructField("broker", StringType, true),
-      StructField("batch_id", LongType, true) //Nullable to avoid validation error but it is set last in the write method
+      StructField("bid_member", StringType, false),
+      StructField("volume", ColumnHelper.decimalType, false),
+      StructField("price", ColumnHelper.decimalType, false)
     ))
 
+  private lazy val withColumnsSchema: StructType = StructType(
+    Seq(
+      StructField("turnover", ColumnHelper.decimalType, false),
+    ))
+
+  lazy val schema = new StructType(parsingSchema.fields ++ withColumnsSchema.fields)
+
   override def parseRawData(rawData: String): Column = {
-    from_json(col(rawData), schema)
+    from_json(col(rawData), parsingSchema)
   }
 
   override def withAdditionalColumns(source: DataFrame): DataFrame = {
     source.transform(ColumnHelper.withTurnover())
-    source.transform(ColumnHelper.withTradeDate())
   }
 
-
-  def start() {
+  def start(): DataFrame = {
     apply(streamingDF)
   }
 }

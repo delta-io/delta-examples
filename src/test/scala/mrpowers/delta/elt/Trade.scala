@@ -5,9 +5,11 @@ import org.apache.spark.sql.functions.{col, concat_ws, from_json, input_file_nam
 import org.apache.spark.sql.types.{DataTypes, DateType, LongType, StringType, StructField, StructType}
 import org.apache.spark.sql.{Column, DataFrame, SparkSession}
 
-class Trade(streamingDF: DataFrame) extends Elt() {
+class Trade extends Elt() {
 
   override val tableName: String = "trade"
+
+  override val partitions = List("ob_id")
 
   override val validConditionExpr: Column = TableHelper.createValidConditionExpr(schema)
 
@@ -39,9 +41,5 @@ class Trade(streamingDF: DataFrame) extends Elt() {
 
   override def withAdditionalColumns(source: DataFrame): DataFrame = {
     source.transform(ColumnHelper.withTurnover())
-  }
-
-  def start(): DataFrame = {
-    apply(streamingDF)
   }
 }

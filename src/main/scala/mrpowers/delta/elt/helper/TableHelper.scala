@@ -8,10 +8,10 @@ object TableHelper {
 
   final val invalidRecordsTableName = "invalid_records"
 
-  def createSinkTable(spark: SparkSession, tableName: String, schema: StructType, partitionColumns: List[String], rootPath: String) {
-    val fields = getTableFields(schema)
+  def createTable(spark: SparkSession, tableName: String, schema: StructType, partitionColumns: List[String], rootPath: String) {
+    val fields = getSchemaFieldsForDDL(schema)
     val partitions = partitionColumns.mkString("(", ",", ")")
-    val location = createDeltaLocationStr(rootPath, tableName+"/sink")
+    val location = createDeltaLocationStr(rootPath, tableName)
 
     spark.sql("DROP TABLE IF EXISTS "+ tableName)
     spark.sql(
@@ -27,7 +27,7 @@ object TableHelper {
     location
   }
 
-  private def getTableFields(schema: StructType) = {
+  private def getSchemaFieldsForDDL(schema: StructType) = {
     schema.fields
       .map(createField)
       .toList.mkString("(", ",\n ", ")")

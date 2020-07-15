@@ -12,6 +12,7 @@ trait Elt {
   private val parsingInvalidCol = col("parse_details.status") === "NOT_VALID"
 
   val tableName: String
+  val partitions: List[String]
   val uniqueConditions: String
 
   val validConditionExpr: Column

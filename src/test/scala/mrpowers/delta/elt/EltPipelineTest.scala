@@ -44,7 +44,7 @@ object EltPipelineTest extends FunSpec with SparkSessionTestWrapper with DataFra
   private def startTradeStream = {
     createTradeTable()
     val tradeDF = createTradeDF()
-    new Trade(tradeDF).start()
+    new Trade().apply(tradeDF)
   }
 
   private def cleanUp = {
@@ -64,7 +64,7 @@ object EltPipelineTest extends FunSpec with SparkSessionTestWrapper with DataFra
   }
 
   private def createTradeTable(): Unit ={
-    TableHelper.createSinkTable(spark, "trade", new Trade(spark.emptyDataFrame).schema, List("ob_id"), rootPath)
+    TableHelper.createTable(spark, "trade", new Trade().schema, List("ob_id"), rootPath)
   }
 
   private def createTradeDF(): DataFrame = {

@@ -2,41 +2,57 @@ package mrpowers.delta.elt
 
 import com.github.mrpowers.spark.daria.utils.NioUtils
 import com.github.mrpowers.spark.fast.tests.DataFrameComparer
+import io.delta.tables.DeltaTable
 import mrpowers.delta.elt.helper.TableHelper
 import mrpowers.delta.examples.SparkSessionTestWrapper
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.streaming.{OutputMode}
 import org.scalatest.FunSpec
 
-class EltSpec extends FunSpec with SparkSessionTestWrapper with DataFrameComparer{
+
+class EltTest extends FunSpec with SparkSessionTestWrapper with DataFrameComparer {
 
   val sourceRootPath = "./src/test/resources/elt/"
-  val sinkRootPath = "./tmp/elt_delta_lake/"
+  val sinkRootPath = "./tmp/delta_lake_elt/"
+
+  val tradeHandler = new Trade
+
+  it("clean up") {
+    val file = new java.io.File(sinkRootPath)
+    if (file.exists) {
+      NioUtils.removeUnder(file)
+      NioUtils.removeAll(file)
+    }
+  }
 
   it("create folders") {
     createFolder(sinkRootPath)
-    createFolder(sinkRootPath+"invalid_record")
-    createFolder(sinkRootPath+"trade")
-    createFolder(sinkRootPath+"checkpoint")
+    createFolder(sinkRootPath + "invalid_record")
+    createFolder(sinkRootPath + "trade")
   }
 
   it("create tables") {
     createTables()
   }
 
-  it("start trade processing and verify dataframe") {
+  it("start trade processing") {
     startTradeProcessing()
   }
 
+  it("Verify written delta files") {
+    DeltaTable.forName(spark, "trade").toDF.show(10)
+    DeltaTable.forName(spark, TableHelper.invalidRecordsTableName).toDF.show(10)
+  //Todo verify frames
+  }
+
+
   private def createFolder(path: String) {
-    val file = new java.io.File(path)
-    if (file.exists) {
-      file.delete()
-    }
-    file.mkdir()
+    new java.io.File(path).mkdir()
   }
 
   private def createTables() {
     createInvalidRecordTable
-    TableHelper.createTable(spark, "trade", new Trade().schema, new Trade().partitions, sinkRootPath)
+    TableHelper.createTable(spark, "trade", tradeHandler.schema, tradeHandler.partitions, sinkRootPath)
   }
 
 
@@ -52,19 +68,16 @@ class EltSpec extends FunSpec with SparkSessionTestWrapper with DataFrameCompare
 
 
   private def startTradeProcessing() {
-    val tradeDF = spark.readStream
+    spark.readStream
       .format("text")
       .option("maxFilesPerTrigger", 1)
       .option("checkpointLocation", sinkRootPath + "checkpoint")
       .load(sourceRootPath + "/trade/source")
-
-    new Trade().apply(tradeDF)
       .writeStream
-      .outputMode("append")
-      .format("console")
-      .start()
-
-    spark.streams.awaitAnyTermination()
+      .outputMode(OutputMode.Append())
+      .foreachBatch { (batchDF: DataFrame, batchId: Long) =>
+        tradeHandler.apply(batchDF, batchId)
+      }.start()
+      .awaitTermination(60000)
   }
-
 }

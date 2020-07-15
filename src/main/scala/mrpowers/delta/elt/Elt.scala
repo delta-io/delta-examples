@@ -4,7 +4,7 @@ import com.github.mrpowers.spark.daria.sql.DataFrameExt.DataFrameMethods
 import io.delta.tables.DeltaTable
 import mrpowers.delta.elt.helper.TableHelper
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.{Column, DataFrame, SparkSession, types}
+import org.apache.spark.sql.{Column, DataFrame}
 
 trait Elt {
 
@@ -19,17 +19,25 @@ trait Elt {
   val additionalDetailsExpr: Column
 
   def prepare(source: DataFrame): DataFrame = source
+
   def parseRawData(rawData: String): Column
+
   def withAdditionalColumns(source: DataFrame): DataFrame = source
 
-  final def apply(source: DataFrame): DataFrame = {
+  final def apply(source: DataFrame, batchId: Long) {
+    source.persist()
+
     source
       .transform(prepare)
       .select(struct("*") as 'origin)
       .transform(parse)
       .transform(withAdditionalColumns)
       .transform(withParseDetails)
-      .transform(writeToDelta)
+      .transform(insertIntoDelta(batchId))
+
+    compressFiles()
+
+    source.unpersist()
   }
 
   final def parse(source: DataFrame): DataFrame = {
@@ -55,14 +63,28 @@ trait Elt {
     )
   }
 
-  final def writeToDelta(source: DataFrame): DataFrame =  {
-    source.writeStream
-      .format("delta")
-      .foreachBatch(insertToDelta _)
-      .outputMode("append")
-      .start()
+  private def insertIntoDelta(batchId: Long)(source: DataFrame): DataFrame = {
+    source.withColumn("batch_id", typedLit(batchId))
+    //Use the batch_id in tables to guarantee exactly-once
 
+    insert(source, parsingValidCol, uniqueConditions, tableName)
+    insert(source, parsingInvalidCol, "1 = 1", TableHelper.invalidRecordsTableName)
+    source
+  }
+
+
+  private def insert(source: DataFrame, columnPredicate: Column, uniqueConditions: String, tableName: String) {
+    val flattened = source.where(columnPredicate).flattenSchema("_").as("y")
+
+    DeltaTable.forName(tableName).as("x")
+      .merge(flattened, uniqueConditions)
+      .whenNotMatched().insertAll()
+      .execute()
+  }
+
+  private def compressFiles() {
     //Decompress in interval's here ?
+    // val partitions: List[String]
     /* DeltaLogHelpers.partitionedLake1GbChunks
 
      spark.read
@@ -76,24 +98,5 @@ trait Elt {
        .mode("overwrite")
        .option("replaceWhere", partition)
        .save(path)*/
-    source
-  }
-
-  private def insertToDelta(batchDF: DataFrame, batchId: Long) {
-    // batchDF.withColumn("batch_id", typedLit(batchId))
-
-    batchDF.persist()
-
-    insert(batchDF, parsingValidCol, uniqueConditions, tableName)
-    insert(batchDF, parsingInvalidCol, "1 = 1", TableHelper.invalidRecordsTableName)
-
-    batchDF.unpersist()
-  }
-
-  private def insert(batchDF: DataFrame, columnPredicate: Column, uniqueConditions: String, tableName: String) {
-    DeltaTable.forName(tableName).as("x")
-      .merge(batchDF.where(columnPredicate).flattenSchema("_").as("y"), uniqueConditions)
-      .whenNotMatched().insertAll()
-      .execute()
   }
 }

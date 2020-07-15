@@ -17,6 +17,16 @@ object EltPipelineTest extends FunSpec with SparkSessionTestWrapper with DataFra
 
   def main(args: Array[String]): Unit = {
 
+    /*val deltaLake = "/tmp/delta-lake"
+    val checkpointLocation = "/tmp/delta-checkpointLocation"
+    val path = s"$deltaLake/users"
+    val partitionBy = "city"
+
+    // The streaming query that writes out to Delta Lake
+    val sq = users
+      .writeStream
+      .format("delta")
+      .option("checkpointLocation", checkpointLocation)*/
     cleanUp
 
     createInvalidRecordsTable
@@ -61,6 +71,7 @@ object EltPipelineTest extends FunSpec with SparkSessionTestWrapper with DataFra
     spark.readStream
       .format("text")
       .option("maxFilesPerTrigger", 1)
+      .option("checkpointLocation", rootPath +"/trade/checkpoint")
       .load(rootPath + "/trade/source")
   }
 }

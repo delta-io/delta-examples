@@ -31,4 +31,38 @@ class TimeTravelSpec extends FunSpec with SparkSessionTestWrapper with DataFrame
 
   }
 
+  it("creates a Delta Lake with one file") {
+    val path = os.pwd/"src"/"test"/"resources"/"countries"/"countries1.csv"
+    val df = spark.read.option("header", true).csv(path.toString())
+    val outputPath = os.pwd/"tmp"/"andres_demo"
+    df.write.format("delta").save(outputPath.toString())
+  }
+
+  it("incrementally updates the Delta lake") {
+    val path = os.pwd/"src"/"test"/"resources"/"countries"/"countries2.csv"
+    val df = spark.read.option("header", true).csv(path.toString())
+    val outputPath = os.pwd/"tmp"/"andres_demo"
+    df.write.format("delta").mode("append").save(outputPath.toString())
+  }
+
+  it("can display all the data in the lake") {
+    val deltaPath = os.pwd/"tmp"/"andres_demo"
+    val df = spark.read.format("delta").load(deltaPath.toString())
+    df.show()
+  }
+
+  it("can time travel to the first version of the Delta Lake") {
+    val deltaPath = os.pwd/"tmp"/"andres_demo"
+    val df = spark.read
+      .format("delta")
+      .option("versionAsOf", 0)
+      .load(deltaPath.toString())
+    df.show()
+  }
+
+  it("deletes the Delta lake") {
+    val deltaPath = os.pwd/"tmp"/"andres_demo"
+    os.remove.all(deltaPath)
+  }
+
 }

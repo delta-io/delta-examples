@@ -36,4 +36,12 @@ class CreateATableSpec extends FunSpec with SparkSessionTestWrapper with DataFra
 
   }
 
+  it("creates a table with saveAsTable") {
+    val whatever = os.pwd/"spark-warehouse"/"whatever"
+    if (os.exists(whatever)) os.remove.all(whatever)
+    val df = spark.range(3)
+    df.write.format("delta").saveAsTable("whatever")
+    if (os.exists(whatever)) os.remove.all(whatever)
+  }
+
 }

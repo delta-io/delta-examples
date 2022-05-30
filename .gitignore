@@ -11,6 +11,9 @@ project/boot/
 .DS_Store
 
 /tmp
+notebooks/tmp/
 
 /metastore_db/
 derby.log
+
+.ipynb_checkpoints

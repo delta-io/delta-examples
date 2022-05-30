@@ -2,7 +2,16 @@
 
 This repo provides working code for the examples covered in the [Delta Lake documentation](https://docs.delta.io/latest/index.html).
 
-It also provides code to support Spark Summit talks and blog posts.
+It also provides notebooks for the PySpark Delta Lake examples.
+
+## Machine setup
+
+* Install Java if you haven't already.  SDKMAN works well for managing multiple Java versions, [as described in this blog post](https://mungingdata.com/java/sdkman-multiple-versions-java-sbt-scala/).
+* Create a conda environment with compatible PySpark & Delta Lake versions.  For example PySpark 3.2.0 is compatible with Delta Lake 1.2.1.  You can use [this environment](https://github.com/MrPowers/delta-examples/blob/master/envs/mr-delta.yml) by running `conda env create -f envs/mr-delta.yml`.
+* Activate the environment with `conda activate mr-delta`.
+* Open the notebooks with Jupyter Lab by running `jupyter lab`.
+
+You can easily run the commands in the Jupyter Notebooks to execute the Delta example computations on your machine.
 
 ## [Create a table](https://docs.delta.io/latest/quick-start.html#create-a-table) and [read data](https://docs.delta.io/latest/quick-start.html#read-data)
 

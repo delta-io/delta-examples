@@ -12,6 +12,7 @@ project/boot/
 
 /tmp
 notebooks/tmp/
+notebooks/delta-rs/tmp/
 
 /metastore_db/
 derby.log

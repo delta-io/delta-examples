@@ -14,5 +14,5 @@ dependencies:
   - pytest
   - pip
   - pip:
-    - deltalake
+    - deltalake==0.5.8
 

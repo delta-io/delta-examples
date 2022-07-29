@@ -1,17 +1,30 @@
 # delta-examples
 
-This repo provides working code for the examples covered in the [Delta Lake documentation](https://docs.delta.io/latest/index.html).
+This repo provides working code notebooks so you can execute code like the [Delta Lake documentation](https://docs.delta.io/latest/index.html) with Scala Spark and PySpark on your local machine.  It also provides [delta-rs](https://github.com/delta-io/delta-rs) examples.
 
-It also provides notebooks for the PySpark Delta Lake examples.
+Running Delta commands on your local machine and studying the files that are created is a great way to learn about how Delta Lake works.
 
-## Machine setup
+## PySpark setup
 
-* Install Java if you haven't already.  SDKMAN works well for managing multiple Java versions, [as described in this blog post](https://mungingdata.com/java/sdkman-multiple-versions-java-sbt-scala/).
-* Create a conda environment with compatible PySpark & Delta Lake versions.  For example PySpark 3.2.0 is compatible with Delta Lake 1.2.1.  You can use [this environment](https://github.com/MrPowers/delta-examples/blob/master/envs/mr-delta.yml) by running `conda env create -f envs/mr-delta.yml`.
-* Activate the environment with `conda activate mr-delta`.
-* Open the notebooks with Jupyter Lab by running `jupyter lab`.
+You can install PySpark and Delta Lake by creating the `mr-delta` conda environment.
 
-You can easily run the commands in the Jupyter Notebooks to execute the Delta example computations on your machine.
+Create the environment with this command: `conda env create -f envs/mr-delta.yml`.
+
+Activate the environment with this command: `conda activate mr-delta`.
+
+Then you can run `jupyter lab` and execute all the PySpark notebooks.
+
+## delta-rs setup (Python bindings)
+
+You can run the delta-rs notebooks that use the Python bindings by creating the `mr-delta-rs` conda environment.
+
+Create the environment with this command: `conda env create -f envs/mr-delta-rs.yml`.
+
+Activate the environment with this command: `conda activate mr-delta-rs`.
+
+## Scala setup
+
+TODO: Figure out how to use Courier and add.
 
 ## [Create a table](https://docs.delta.io/latest/quick-start.html#create-a-table) and [read data](https://docs.delta.io/latest/quick-start.html#read-data)
 
@@ -284,8 +297,4 @@ spark.read.format("delta").option("versionAsOf", 0).load(path).show()
 |  4|
 +---+
 ```
-
-
-
-
 

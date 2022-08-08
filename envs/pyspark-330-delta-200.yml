@@ -1,0 +1,17 @@
+name: pyspark-300-delta-200
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - ipykernel
+  - nb_conda
+  - jupyterlab
+  - jupyterlab_code_formatter
+  - isort
+  - black
+  - pytest
+  - pyspark=3.3.0
+  - pip
+  - pip:
+    - delta-spark==2.0.0

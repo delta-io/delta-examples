@@ -1,0 +1,19 @@
+name: mr-pyspark
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8
+  - pandas
+  - pyarrow
+  - ipykernel
+  - s3fs
+  - python-blosc
+  - lz4
+  - nb_conda
+  - jupyterlab
+  - jupyterlab_code_formatter
+  - isort
+  - black
+  - pytest
+  - pyspark=3.2.0

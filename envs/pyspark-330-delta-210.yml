@@ -1,0 +1,19 @@
+name: pyspark-330-delta-210
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - ipykernel
+  - nb_conda
+  - jupyterlab
+  - jupyterlab_code_formatter
+  - isort
+  - black
+  - pytest
+  - pyspark=3.3.0
+  - pip
+  - pip:
+    - delta-spark==2.1.0
+    - quinn
+    - chispa

@@ -8,7 +8,7 @@ Running Delta commands on your local machine and studying the files that are cre
 
 You can install PySpark and Delta Lake by creating the `mr-delta` conda environment.
 
-Create the environment with this command: `conda env create -f envs/mr-delta.yml`.
+Create the environment with this command: `conda env create -f envs/pyspark-330-delta-210`.
 
 Activate the environment with this command: `conda activate mr-delta`.
 

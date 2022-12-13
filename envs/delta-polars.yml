@@ -1,0 +1,18 @@
+name: delta-polars
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - ipykernel
+  - nb_conda
+  - jupyterlab
+  - jupyterlab_code_formatter
+  - isort
+  - black
+  - pytest
+  - pandas
+  - pip
+  - pip:
+    - deltalake==0.6.4
+    - polars==0.15.5

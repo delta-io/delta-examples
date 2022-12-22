@@ -15,4 +15,4 @@ dependencies:
   - pip
   - pip:
     - deltalake==0.6.4
-    - polars==0.15.5
+    - polars==0.15.7

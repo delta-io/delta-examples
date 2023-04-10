@@ -13,8 +13,12 @@ project/boot/
 /tmp
 notebooks/tmp/
 notebooks/delta-rs/tmp/
+tmp/
+spark-warehouse/
 
 /metastore_db/
 derby.log
 
 .ipynb_checkpoints
+
+.jupyter/

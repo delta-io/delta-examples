@@ -1,0 +1,19 @@
+name: deltalake-081
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - ipykernel
+  - pandas
+  - ibis-framework
+  - nb_conda
+  - jupyterlab
+  - jupyterlab_code_formatter
+  - isort
+  - black
+  - pytest
+  - pip
+  - pip:
+    - deltalake==0.8.1
+

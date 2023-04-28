@@ -16,4 +16,5 @@ dependencies:
   - pip
   - pip:
     - deltalake==0.8.1
+    - duckdb==0.7.1
 

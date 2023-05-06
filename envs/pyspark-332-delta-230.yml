@@ -13,6 +13,7 @@ dependencies:
   - pytest
   - pyspark=3.3.2
   - delta-spark==2.3.0
+  - ibis-pyspark
   - pip
   - pip:
     - quinn

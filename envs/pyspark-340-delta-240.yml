@@ -1,0 +1,22 @@
+name: pyspark-340-delta-240
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - ipykernel
+  - nb_conda
+  - jupyterlab
+  - jupyterlab_code_formatter
+  - isort
+  - black
+  - pytest
+  - pyspark=3.4.0
+  - delta-spark==2.4.0
+  - pip
+  - pip:
+    - quinn
+    - chispa
+    - mack
+    - levi
+    - deltalake

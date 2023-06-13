@@ -1,0 +1,23 @@
+name: deltalake-0100
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - ipykernel
+  - pandas=1.5.3
+  - ibis-framework
+  - nb_conda
+  - jupyterlab
+  - jupyterlab_code_formatter
+  - isort
+  - black
+  - pytest
+  - dask
+  - pip
+  - pip:
+    - deltalake==0.10.0
+    - duckdb==0.7.1
+    - polars==0.17.12
+    - datafusion==23.0.0
+

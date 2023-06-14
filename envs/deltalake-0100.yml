@@ -20,4 +20,5 @@ dependencies:
     - duckdb==0.7.1
     - polars==0.17.12
     - datafusion==23.0.0
+    - levi
 

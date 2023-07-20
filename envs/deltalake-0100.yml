@@ -7,7 +7,6 @@ dependencies:
   - ipykernel
   - pandas=1.5.3
   - ibis-framework
-  - nb_conda
   - jupyterlab
   - jupyterlab_code_formatter
   - isort

@@ -22,3 +22,6 @@ derby.log
 .ipynb_checkpoints
 
 .jupyter/
+env/
+notebooks/deltatorch/data/
+*.pyc

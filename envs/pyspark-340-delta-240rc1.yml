@@ -5,7 +5,6 @@ channels:
 dependencies:
   - python=3.9
   - ipykernel
-  - nb_conda
   - jupyterlab
   - jupyterlab_code_formatter
   - isort

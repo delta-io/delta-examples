@@ -1,0 +1,19 @@
+name: pyspark-340-delta-300rc1
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - ipykernel
+  - jupyterlab
+  - jupyterlab_code_formatter
+  - isort
+  - black
+  - pytest
+  - pyspark=3.4.0
+  - pip
+  - pip:
+    - quinn
+    - chispa
+    - --extra-index-url https://test.pypi.org/simple/
+    - delta-spark==3.0.0rc1

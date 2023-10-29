@@ -41,6 +41,21 @@ Create the environment with this command: `conda env create -f envs/mr-delta-rs.
 
 Activate the environment with this command: `conda activate mr-delta-rs`.
 
+## delta-rs Rust setup
+
+Rust notebooks in `notebooks/delta-rs` were developed using [Evcxr Jupyter Kernel](https://github.com/evcxr/evcxr/tree/main/evcxr_jupyter). 
+
+You can either follow the instructions in [Evcxr Jupyter Kernel](https://github.com/evcxr/evcxr/tree/main/evcxr_jupyter) to set it up, or you can use the included Docker file using the following commands (in which case all you need is Docker installed):
+```
+cd notebooks/delta-rs
+
+docker build -t delta-rs .
+docker run -it --rm  -p 8888:8888 --name delta-rs -v $PWD/notebooks/delta-rs:/usr/src/delta-rs delta-rs
+```
+
+**Note:** *One of the main reasons for creating the Dockerfile was an issue with running Evcxr Jupyter Kernel on MacOS with Applle chip - despite being able to build Rust applications directly on on the host after setting `[target.aarch64-apple-darwin]` in the `~/.cargo/config` file, `:dep` builds are stil not working in the notebook.* 
+
+
 ## Scala setup
 
 You can install [almond](https://almond.sh/) to run the Scala Spark notebooks in this repo.

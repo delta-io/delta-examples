@@ -1,0 +1,4 @@
+{"protocol":{"minReaderVersion":1,"minWriterVersion":1}}
+{"metaData":{"id":"0e807d97-2895-4830-a172-eb9f06e23944","name":null,"description":null,"format":{"provider":"parquet","options":{}},"schemaString":"{\"type\":\"struct\",\"fields\":[{\"name\":\"num\",\"type\":\"integer\",\"nullable\":false,\"metadata\":{}},{\"name\":\"letter\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}","partitionColumns":[],"createdTime":1698613084286,"configuration":{}}}
+{"add":{"path":"part-00001-e2c7edd4-83e0-4c67-8190-0b6ba55bc405-c000.snappy.parquet","size":795,"partitionValues":{},"modificationTime":1698613084290,"dataChange":true,"stats":"{\"numRecords\":3,\"minValues\":{\"letter\":\"a\",\"num\":1},\"maxValues\":{\"num\":3,\"letter\":\"c\"},\"nullCount\":{\"letter\":0,\"num\":0}}"}}
+{"commitInfo":{"timestamp":1698613084290,"operation":"WRITE","operationParameters":{"mode":"Append"},"clientVersion":"delta-rs.0.16.2"}}

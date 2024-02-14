@@ -53,7 +53,7 @@ docker build -t delta-rs .
 docker run -it --rm  -p 8888:8888 --name delta-rs -v $PWD/notebooks/delta-rs:/usr/src/delta-rs delta-rs
 ```
 
-**Note:** *One of the main reasons for creating the Dockerfile was an issue with running Evcxr Jupyter Kernel on MacOS with Applle chip - despite being able to build Rust applications directly on on the host after setting `[target.aarch64-apple-darwin]` in the `~/.cargo/config` file, `:dep` builds are stil not working in the notebook.* 
+**Note:** *One of the main reasons for creating the Dockerfile was an issue with running Evcxr Jupyter Kernel on MacOS with Apple chip - despite being able to build Rust applications directly on on the host after setting `[target.aarch64-apple-darwin]` in the `~/.cargo/config` file, `:dep` builds are stil not working in the notebook.* 
 
 
 ## Scala setup

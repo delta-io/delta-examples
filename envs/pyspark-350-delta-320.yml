@@ -1,4 +1,4 @@
-name: pyspark-350-delta-310
+name: pyspark-350-delta-320
 channels:
   - conda-forge
   - defaults

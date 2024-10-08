@@ -19,3 +19,4 @@ dependencies:
     - polars==1.9.0
     - datafusion==41.0.0
     - tabulate
+    - getdaft
